@@ -1,0 +1,5 @@
+*~
+*.o
+compile*
+a.out
+C
