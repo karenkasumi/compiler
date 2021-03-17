@@ -20,8 +20,29 @@ Node *new_node_num(int val) {
   return node;
 }
 
+Node *code[100];
 
-Node *expr() {
+Node *expr(){
+    Node *node = equality();
+    if(consume("="))
+        node = new_node(ND_ASSIGN, node, expr());
+    return node;    
+}
+
+Node *stmt(){
+    Node *node = expr();
+    expect(";");
+    return node;
+}
+
+void *program(){
+    int i = 0;
+    while(!at_eof())
+        code[i++] = stmt();
+    code[i] = NULL;
+}
+
+Node *equality() {
   Node *node = relational();
 
   for (;;) {
@@ -91,6 +112,16 @@ Node *primary() {
     return node;
   }
 
+  if(token->kind == TK_IDENT){
+      Node *node = calloc(1, sizeof(Node));
+      node->kind = ND_LVAR;
+      node->offset = (token->str[0] - 'a' + 1)*8;
+      token = token->next;
+      return node;
+  }
+
   // ‚»‚¤‚Å‚È‚¯‚ê‚Î”’l‚Ì‚Í‚¸
   return new_node_num(expect_number());
+
+
 }

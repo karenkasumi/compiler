@@ -31,7 +31,7 @@ bool consume(char *op) {
 void expect(char *op) {
   if (token->kind != TK_RESERVED || strlen(op) != token->len ||
       memcmp(token->str, op, token->len))
-    error("\n");
+    error("bbbbb\n");
   token = token->next;
 }
 
@@ -80,10 +80,17 @@ Token *tokenize(char *p) {
       p+=2;
       continue;
     }
+
+    if('a' <= *p && *p <= 'z'){
+      cur = new_token(TK_IDENT, cur, p++, 1);
+      continue;
+    }
+
     if (*p == '+' || *p == '-' || 
         *p =='*'  || *p == '/' || 
         *p == ')' || *p == '(' ||
-        *p == '>' || *p == '<') {
+        *p == '>' || *p == '<' ||
+        *p == ';' || *p == '=') {
       cur = new_token(TK_RESERVED, cur, p++,1);
       continue;
     }
