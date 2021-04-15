@@ -2,7 +2,7 @@ typedef enum {
   TK_RESERVED, 
   TK_NUM,     
   TK_EOF,
-  TK_IDENT,      
+  TK_IDENT,
 } TokenKind;
 
 typedef struct Token Token;
@@ -10,10 +10,23 @@ typedef struct Token Token;
 struct Token {
   TokenKind kind; 
   Token *next;    
-  int val;        
+  int val;      
   char *str;
   int len;
 };
+
+typedef struct LVar LVar;
+
+
+struct LVar {
+  LVar *next;
+  char *name;
+  int len;
+  int offset;
+};
+
+LVar *find_lvar(Token *tok);
+extern LVar *locals;
 
 typedef enum {
   ND_ADD, // +

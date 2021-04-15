@@ -7,13 +7,13 @@
 #include "C.h"
 
 Token *token;
+LVar *locals;
 int main(int argc, char **argv) {
   if (argc != 2) {
     error("ˆø”‚ÌŒÂ”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
     return 1;
   }
-
-  
+  locals = calloc(1,sizeof(LVar));
   token = tokenize(argv[1]);
   program();
   

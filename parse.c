@@ -105,7 +105,6 @@ Node *unary() {
 }
 
 Node *primary() {
-  // 次のトークンが"("なら、"(" expr ")"のはず
   if (consume("(")) {
     Node *node = expr();
     expect(")");
@@ -113,15 +112,35 @@ Node *primary() {
   }
 
   if(token->kind == TK_IDENT){
-      Node *node = calloc(1, sizeof(Node));
-      node->kind = ND_LVAR;
-      node->offset = (token->str[0] - 'a' + 1)*8;
-      token = token->next;
-      return node;
+    Node *node = calloc(1,sizeof(Node));
+    node->kind = ND_LVAR;
+
+    LVar *lvar = find_lvar(token);
+    if(lvar){
+      node->offset = lvar->offset;
+    }else{
+      lvar = calloc(1,sizeof(LVar));
+      lvar->next = locals;
+      lvar->name = token->str;
+      lvar->len =  token->len;
+      lvar->offset = locals->offset + 8;
+      node->offset = lvar->offset;
+      locals = lvar;
+    }
+    token = token->next;
+    return node;
   }
 
   // そうでなければ数値のはず
   return new_node_num(expect_number());
 
 
+}
+
+
+LVar *find_lvar(Token *tok){
+  for (LVar *var = locals; var; var = var->next)
+    if (var->len == tok->len && !memcmp(tok->str, var->name, var->len))
+      return var;
+  return NULL;
 }
