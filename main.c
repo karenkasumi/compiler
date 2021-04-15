@@ -10,7 +10,7 @@ Token *token;
 LVar *locals;
 int main(int argc, char **argv) {
   if (argc != 2) {
-    error("ˆø”‚ÌŒÂ”‚ª³‚µ‚­‚ ‚è‚Ü‚¹‚ñ");
+    error("dddd");
     return 1;
   }
   locals = calloc(1,sizeof(LVar));

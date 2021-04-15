@@ -30,8 +30,17 @@ Node *expr(){
 }
 
 Node *stmt(){
-    Node *node = expr();
-    expect(";");
+    Node *node;
+    if(token->kind == TK_RETURN){
+      node = calloc(1, sizeof(Node));
+      node->kind = ND_RETURN;
+      token = token->next;
+      node->lhs = expr();
+    }else{
+      node = expr();
+    }
+    if(!consume(";"))
+      error("cccc\n");
     return node;
 }
 

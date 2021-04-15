@@ -3,6 +3,7 @@ typedef enum {
   TK_NUM,     
   TK_EOF,
   TK_IDENT,
+  TK_RETURN,
 } TokenKind;
 
 typedef struct Token Token;
@@ -14,6 +15,8 @@ struct Token {
   char *str;
   int len;
 };
+
+int is_alnum(char c);
 
 typedef struct LVar LVar;
 
@@ -42,6 +45,7 @@ typedef enum {
   ND_esmall,
   ND_ASSIGN,
   ND_LVAR,
+  ND_RETURN,
 } NodeKind;
 
 typedef struct Node Node;
