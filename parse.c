@@ -36,6 +36,15 @@ Node *stmt(){
       node->kind = ND_RETURN;
       token = token->next;
       node->lhs = expr();
+    }else if(token->kind == TK_IF){
+      node = calloc(1, sizeof(Node));
+      node->kind = ND_IF;
+      token = token->next;
+      consume("(");
+      node->lhs = expr();
+      consume(")");
+      node->rhs = stmt();
+      return node;
     }else{
       node = expr();
     }
