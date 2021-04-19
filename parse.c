@@ -44,6 +44,11 @@ Node *stmt(){
       node->lhs = expr();
       consume(")");
       node->rhs = stmt();
+      if(token->kind == TK_ELSE){
+        node->kind = ND_IF_ELSE;
+        token = token->next;
+        node->lhs->lhs = stmt();
+      }
       return node;
     }else{
       node = expr();

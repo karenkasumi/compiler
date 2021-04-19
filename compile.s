@@ -4,23 +4,32 @@ main:
   push rbp
   mov rbp, rsp
   sub rsp, 208
-  push 1
-  push 1
-  pop rdi
-  pop rax
-  cmp rax, rdi
-  sete al
-  movzb rax, al
-  push rax
+  push 0
   pop rax
   cmp rax, 0
-  je .LendXXX
+  je .LelseXXX
   push 0
   pop rax
   mov rsp, rbp
   pop rbp
   ret
+  jmp .LendXXX
+.LelseXXX:
+  push 1
+  pop rax
+  mov rsp, rbp
+  pop rbp
+  ret
 .LendXXX:
+  push 0
+  push 0
+  pop rax
+  mov rsp, rbp
+  pop rbp
+  ret
+  pop rdi
+  pop rax
+  push rax
   pop rax
   mov rsp, rbp
   pop rbp
