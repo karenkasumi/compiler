@@ -50,6 +50,15 @@ Node *stmt(){
         node->lhs->lhs = stmt();
       }
       return node;
+    }else if(token->kind == TK_WHILE){
+      node = calloc(1, sizeof(Node));
+      node->kind = ND_WHILE;
+      token = token->next;
+      consume("(");
+      node->lhs = expr();
+      consume(")");
+      node->rhs = stmt();
+      return node;
     }else{
       node = expr();
     }

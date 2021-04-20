@@ -58,6 +58,17 @@ void gen(Node *node) {
         printf(".LelseXXX:\n");
         gen(node->lhs->lhs);
         printf(".LendXXX:\n");
+        return;
+    case ND_WHILE:
+        printf(".LbeginXXX:\n");
+        gen(node->lhs);
+        printf("  pop rax\n");
+        printf("  cmp rax, 0\n");
+        printf("  je .LendXXX\n");
+        gen(node->rhs);
+        printf("  jmp .LbeginXXX\n");
+        printf(".LendXXX:\n");
+        return;
     }
 
   gen(node->lhs);
@@ -86,8 +97,8 @@ void gen(Node *node) {
     printf("  movzb rax, al\n");
     break;
   case ND_nequal:
-    printf("  setne rax, rdi\n");
-    printf("  sete al\n");
+    printf("  cmp rax, rdi\n");
+    printf("  setne al\n");
     printf("  movzb rax, al\n");
     break;
   case ND_big:
