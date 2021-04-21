@@ -81,6 +81,15 @@ Node *stmt(){
       }
       node->rhs = stmt();
       return node;
+    }else if(consume("{")){
+      node = calloc(1, sizeof(Node));
+      node->kind = ND_BLOCK;
+      int i=0;
+
+      while(!consume("}")){
+        node->block[i++] = stmt();
+      }
+      return node;
     }else{
       node = expr();
     }

@@ -54,6 +54,7 @@ typedef enum {
   ND_IF_ELSE,
   ND_WHILE,
   ND_FOR,
+  ND_BLOCK,
 } NodeKind;
 
 typedef struct Node Node;
@@ -64,7 +65,8 @@ struct Node {
   Node *lhs;     
   Node *rhs;     
   int val;
-  int offset;       
+  int offset;
+  Node *block[100];       
 };
 Node *new_node(NodeKind kind, Node *lhs, Node *rhs);
 Node *new_node_num(int val);
