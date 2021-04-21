@@ -30,4 +30,5 @@ assert 0 "if(1==1)return 0;"
 assert 1 "if(1==2)return 0;else return 1;"
 assert 0 "i=0;while(i==1)return 1;i;"
 assert 10 "i=0;while(i!=10)i=i+1;i;"
+assert 2 "a=0;for(i=1;i!=3;i=i+1)a=a+1;a;"
 echo OK

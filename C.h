@@ -7,6 +7,7 @@ typedef enum {
   TK_IF,
   TK_ELSE,
   TK_WHILE,
+  TK_FOR,
 } TokenKind;
 
 typedef struct Token Token;
@@ -52,6 +53,7 @@ typedef enum {
   ND_IF,
   ND_IF_ELSE,
   ND_WHILE,
+  ND_FOR,
 } NodeKind;
 
 typedef struct Node Node;

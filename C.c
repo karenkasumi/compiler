@@ -100,6 +100,11 @@ Token *tokenize(char *p) {
       p += 5;
       continue;
     }
+    if (strncmp(p, "for", 3) == 0 && !is_alnum(p[3])){
+      cur =new_token(TK_FOR, cur, p, 3);
+      p += 3;
+      continue;
+    }
 
     if('a' <= *p && *p <= 'z'){
       int i=0;
@@ -118,7 +123,8 @@ Token *tokenize(char *p) {
         *p =='*'  || *p == '/' || 
         *p == ')' || *p == '(' ||
         *p == '>' || *p == '<' ||
-        *p == ';' || *p == '=') {
+        *p == ';' || *p == '=' ||
+        *p == '{' || *p == '}') {
       cur = new_token(TK_RESERVED, cur, p++,1);
       continue;
     }

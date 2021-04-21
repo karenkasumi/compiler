@@ -38,16 +38,17 @@ Node *stmt(){
       node->lhs = expr();
     }else if(token->kind == TK_IF){
       node = calloc(1, sizeof(Node));
+      node->rhs = calloc(1, sizeof(Node));
       node->kind = ND_IF;
       token = token->next;
       consume("(");
       node->lhs = expr();
       consume(")");
-      node->rhs = stmt();
+      node->rhs->rhs = stmt();
       if(token->kind == TK_ELSE){
         node->kind = ND_IF_ELSE;
         token = token->next;
-        node->lhs->lhs = stmt();
+        node->rhs->lhs = stmt();
       }
       return node;
     }else if(token->kind == TK_WHILE){
@@ -57,6 +58,27 @@ Node *stmt(){
       consume("(");
       node->lhs = expr();
       consume(")");
+      node->rhs = stmt();
+      return node;
+    }else if(token->kind == TK_FOR){
+      node = calloc(1, sizeof(Node));
+      node->lhs=calloc(1, sizeof(Node));
+      node->lhs->lhs=calloc(1,sizeof(Node));
+      node->kind = ND_FOR;
+      token = token->next;
+      consume("(");
+      if(!consume(";")) {
+        node->lhs->lhs->lhs = expr();
+        consume(";");
+      }
+      if(!consume(";")) {
+        node->lhs->lhs->rhs = expr();
+        consume(";");
+      }
+      if(!consume(")")) {
+        node->lhs->rhs = expr();
+        consume(")");
+      }
       node->rhs = stmt();
       return node;
     }else{
