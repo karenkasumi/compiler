@@ -22,19 +22,6 @@ struct Token {
 
 int is_alnum(char c);
 
-typedef struct LVar LVar;
-
-
-struct LVar {
-  LVar *next;
-  char *name;
-  int len;
-  int offset;
-};
-
-LVar *find_lvar(Token *tok);
-extern LVar *locals;
-
 typedef enum {
   ND_ADD, // +
   ND_SUB, // -
@@ -55,6 +42,8 @@ typedef enum {
   ND_WHILE,
   ND_FOR,
   ND_BLOCK,
+  ND_FUNC,
+  ND_FUNC_DEF,
 } NodeKind;
 
 typedef struct Node Node;
@@ -66,19 +55,41 @@ struct Node {
   Node *rhs;     
   int val;
   int offset;
-  Node *block[100];       
+  Node *argu[10];
+  Node *block[100];
+  int gloloc;       
 };
+
+typedef struct LVar LVar;
+
+
+struct LVar {
+  LVar *next;
+  char *name;
+  int len;
+  int offset;
+  Node *def;
+  int gloloc;
+};
+
+LVar *find_lvar(Token *tok, int gloloc);
+extern LVar *locals[];
+
+
+
+
+
 Node *new_node(NodeKind kind, Node *lhs, Node *rhs);
 Node *new_node_num(int val);
 void *program();
-Node *stmt();
-Node *equality();
-Node *expr();
-Node *relational();
-Node *add();
-Node *mul();
-Node *unary();
-Node *primary();
+Node *stmt(int);
+Node *equality(int);
+Node *expr(int);
+Node *relational(int);
+Node *add(int);
+Node *mul(int);
+Node *unary(int);
+Node *primary(int);
 extern Node *code[];
 
 void gen(Node *node);

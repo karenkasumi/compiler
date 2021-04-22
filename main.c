@@ -7,14 +7,17 @@
 #include "C.h"
 
 Token *token;
-LVar *locals;
+LVar *locals[9];
 int main(int argc, char **argv) {
   if (argc != 2) {
     error("dddd");
     return 1;
   }
-  locals = calloc(1,sizeof(LVar));
+  for(int i=0;i<10;i++){
+  locals[i] = calloc(10,sizeof(LVar));
+  }
   token = tokenize(argv[1]);
+  
   program();
   
   printf(".intel_syntax noprefix\n");

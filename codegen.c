@@ -13,6 +13,7 @@ void gen_lval(Node *node){
     printf("  push rax\n");
 }
 
+int reflag=0;
 void gen(Node *node) {
     switch(node->kind){
     case ND_NUM:
@@ -36,11 +37,17 @@ void gen(Node *node) {
     case ND_RETURN:
         gen(node->lhs);
         printf("  pop rax\n");
+        printf("  pop rdi\n");
         printf("  mov rsp, rbp\n");
         printf("  pop rbp\n");
+        if(reflag){
+        printf("  push rax\n");
+        printf("  push rdi\n");
+        }
         printf("  ret\n");
         return;
     case ND_IF:
+        reflag = 0;
         gen(node->lhs);
         printf("  pop rax\n");
         printf("  cmp rax, 0\n");
@@ -49,6 +56,7 @@ void gen(Node *node) {
         printf(".LendXXX:\n");
         return;
     case ND_IF_ELSE:
+        reflag = 0;
         gen(node->lhs);
         printf("  pop rax\n");
         printf("  cmp rax, 0\n");
@@ -60,6 +68,7 @@ void gen(Node *node) {
         printf(".LendXXX:\n");
         return;
     case ND_WHILE:
+        reflag = 0;
         printf(".LbeginXXX:\n");
         gen(node->lhs);
         printf("  pop rax\n");
@@ -70,6 +79,7 @@ void gen(Node *node) {
         printf(".LendXXX:\n");
         return;
     case ND_FOR:
+        reflag = 0;
         gen(node->lhs->lhs->lhs);
         printf(".LbeginXXX:\n");
         gen(node->lhs->lhs->rhs);
@@ -89,6 +99,49 @@ void gen(Node *node) {
           i++;
         }}
         return;
+    case ND_FUNC_DEF:
+        printf("  jmp .Lend%d\n", node->gloloc);
+        printf(".Lbegin%d:\n", node->gloloc);
+        {int i = 0;
+        while(node->argu[i]->kind == ND_LVAR){
+          gen(node->argu[i]);
+          printf("  pop rax\n");
+          i++;
+        }}
+        if(node->rhs->kind == ND_BLOCK){
+        int i=0;
+          while(node->rhs->block[i]){
+            reflag = 1;
+            gen(node->rhs->block[i]);
+            printf("  pop rax\n");
+            i++;
+          }
+        }else{
+          reflag = 1;
+          gen(node->rhs);
+        }
+        printf("  push rax\n");
+        printf(".Lend%d:\n", node->gloloc);
+        return;
+    case ND_FUNC:
+        printf("  push rbp\n");
+        printf("  mov rbp, rsp\n");
+        printf("  sub rsp, 208\n");
+        {int i = 0;
+        while(node->argu[i]){
+          gen(node->argu[i]);
+          printf("  pop rdi\n");
+          printf("  mov rax, rbp\n");
+          printf("  sub rax, %d\n",(i+1)*8);
+          printf("  mov [rax], rdi\n");
+          i++;
+        }}
+        printf("  call .Lbegin%d\n", node->gloloc);
+        printf("  pop rax\n");
+        printf("  push rax\n");
+
+        return;
+         
     }
     
 

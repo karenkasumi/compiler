@@ -32,4 +32,8 @@ assert 0 "i=0;while(i==1)return 1;i;"
 assert 10 "i=0;while(i!=10)i=i+1;i;"
 assert 2 "a=0;for(i=1;i!=3;i=i+1)a=a+1;a;"
 assert 2 "{a=1;b=1;}a+b;"
+assert 2 "x=1;y=1;return x+y;"
+assert 1 "foo(x,y){return 1;} foo(1,1);"
+assert 3 "foo(x,y){return x+y;}foo(1,2);"
+assert 1 "foo(x,y){if(x==y)a=1; return a;}foo(1,1);"
 echo OK
